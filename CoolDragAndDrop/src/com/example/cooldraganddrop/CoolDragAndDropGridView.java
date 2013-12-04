@@ -13,14 +13,9 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
-public class CoolDragAndDropGridView extends SpanVariableGridView implements
-		View.OnTouchListener {
+public class CoolDragAndDropGridView extends SpanVariableGridView implements View.OnTouchListener {
 
 	private static final int ITEM_HOVER_DELAY = 450;
-
-	private static final String TAG = "DragAndDropStaggeredGridView";
-
-	final static int RESIZE_DISTANCE = 10;
 
 	private int mDragPointX;
 	private int mDragPointY;
@@ -62,8 +57,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 		initialize();
 	}
 
-	public CoolDragAndDropGridView(Context context, AttributeSet attrs,
-			int defStyle) {
+	public CoolDragAndDropGridView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
 		initialize();
@@ -86,9 +80,9 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 
 	}
 
-	public void setDragAndDropListener(DragAndDropListener l) {
+	public void setDragAndDropListener(DragAndDropListener dragAndDropListener) {
 
-		mDragAndDropListener = l;
+		mDragAndDropListener = dragAndDropListener;
 
 	}
 
@@ -98,8 +92,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 
 			mWindowManager.removeView(mDragImageView);
 
-			BitmapDrawable bitmapDrawable = (BitmapDrawable) mDragImageView
-					.getDrawable();
+			BitmapDrawable bitmapDrawable = (BitmapDrawable) mDragImageView.getDrawable();
 			if (bitmapDrawable != null) {
 				final Bitmap bitmap = bitmapDrawable.getBitmap();
 				if (bitmap != null && !bitmap.isRecycled()) {
@@ -130,10 +123,8 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 
 		mWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 		mWindowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-		mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-				| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+		mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
 		mWindowParams.format = PixelFormat.TRANSLUCENT;
 		mWindowParams.alpha = 0.7f;
@@ -143,8 +134,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 		iv.setBackgroundColor(Color.parseColor("#ff555555"));
 		iv.setImageBitmap(bm);
 
-		mWindowManager = (WindowManager) getContext().getSystemService(
-				Context.WINDOW_SERVICE);// "window"
+		mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);// "window"
 		mWindowManager.addView(iv, mWindowParams);
 		return iv;
 
@@ -177,22 +167,18 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 		return i;
 	}
 
-	private void onDrop(final int x, final int y) {
+	private void onDrop() {
 
 		destroyDragImageView();
 
 		removeCallbacks(mDelayedOnDragRunnable);
-
-		final int l = x - mDragPointX;
-		final int t = y - mDragPointY;
 
 		View v = getChildAt(mDropPosition);
 		v.setVisibility(View.VISIBLE);
 
 		v.clearAnimation();
 
-		if (mDragAndDropListener != null
-				&& mDropPosition != AdapterView.INVALID_POSITION) {
+		if (mDragAndDropListener != null && mDropPosition != AdapterView.INVALID_POSITION) {
 
 			mDragAndDropListener.onDropItem(mDragPosition, mDropPosition);
 		}
@@ -209,8 +195,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 
 	private void onDrag(final int x, final int y) {
 
-		if (mScrollingStrategy != null
-				&& mScrollingStrategy.performScrolling(x, y, this)) {
+		if (mScrollingStrategy != null && mScrollingStrategy.performScrolling(x, y, this)) {
 
 			removeCallbacks(mDelayedOnDragRunnable);
 
@@ -219,8 +204,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 
 		final int tempDropPosition = pointToPosition(mCurrentPosition, x, y);
 
-		if (mDragAndDropListener != null && mDropPosition != tempDropPosition
-				&& tempDropPosition != AdapterView.INVALID_POSITION) {
+		if (mDragAndDropListener != null && mDropPosition != tempDropPosition && tempDropPosition != AdapterView.INVALID_POSITION) {
 
 			removeCallbacks(mDelayedOnDragRunnable);
 
@@ -233,13 +217,10 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 					@Override
 					public void run() {
 
-						mDragAndDropListener.onDraggingItem(mCurrentPosition,
-								tempDropPosition);
-						performDragAndDropSwapping(mCurrentPosition,
-								tempDropPosition);
+						mDragAndDropListener.onDraggingItem(mCurrentPosition, tempDropPosition);
+						performDragAndDropSwapping(mCurrentPosition, tempDropPosition);
 
-						final int nextDropPosition = pointToPosition(
-								tempDropPosition, x, y);
+						final int nextDropPosition = pointToPosition(tempDropPosition, x, y);
 
 						if (nextDropPosition == AdapterView.INVALID_POSITION) {
 
@@ -268,8 +249,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 
 	}
 
-	public void setOnTrackTouchEventListener(
-			OnTrackTouchEventsListener onTrackTouchEventsListener) {
+	public void setOnTrackTouchEventListener(OnTrackTouchEventsListener onTrackTouchEventsListener) {
 
 		mOnTrackTouchEventsListener = onTrackTouchEventsListener;
 	}
@@ -278,83 +258,91 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements
 	public boolean onInterceptTouchEvent(MotionEvent event) {
 
 		if (mOnTrackTouchEventsListener != null) {
-
 			mOnTrackTouchEventsListener.trackTouchEvents(event);
-
 		}
 
-		if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-			
+		switch (event.getAction()) {
+
+		case MotionEvent.ACTION_DOWN:
+		case MotionEvent.ACTION_MOVE:
+
+			if (mDragAndDropListener != null && mDragAndDropStarted) {
+
+				mDragAndDropStarted = false;
+
+				getParent().requestDisallowInterceptTouchEvent(true);
+
+				return launchDragAndDrop(event);
+			}
+
+			break;
+
+		default:
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_CANCEL:
+
 			mDragAndDropStarted = false;
-		
-		}
-		else if (mDragAndDropListener != null && mDragAndDropStarted) {
 
+			getParent().requestDisallowInterceptTouchEvent(false);
 
-			return true;
+			break;
 		}
 
 		return super.onInterceptTouchEvent(event);
 	}
 
-	@Override
-	public boolean onTouch(View view, MotionEvent ev) {
+	private boolean launchDragAndDrop(final MotionEvent event) {
 
-		if (mDragAndDropListener != null && mDragAndDropStarted) {
-			mDragAndDropStarted = false;
+		final int x = (int) event.getX();
+		final int y = (int) event.getY();
 
-			getParent().requestDisallowInterceptTouchEvent(true);
+		mCurrentPosition = mDragPosition = mDropPosition = pointToPosition(mDragPosition, x, y);
 
-			final int x = (int) ev.getX();
-			final int y = (int) ev.getY();
+		if (mDragPosition != AdapterView.INVALID_POSITION && mDragAndDropListener.isDragAndDropEnabled(mDragPosition)) {
 
-			mCurrentPosition = mDragPosition = mDropPosition = pointToPosition(
-					mDragPosition, x, y);
-
-			if (mDragPosition == AdapterView.INVALID_POSITION) {
-
-				return false;
-			}
-
-			if (!mDragAndDropListener.isDragAndDropEnabled(mDragPosition)) {
-
-				return false;
-			}
-
-			mDragOffsetX = (int) (ev.getRawX() - x);
-			mDragOffsetY = (int) (ev.getRawY() - y);
+			mDragOffsetX = (int) (event.getRawX() - x);
+			mDragOffsetY = (int) (event.getRawY() - y);
 
 			startDrag(x, y);
 
 			return true;
 		}
 
-		if (mDragAndDropListener != null
-				&& mDragPosition != AdapterView.INVALID_POSITION
-				&& mDragImageView != null) {
+		return false;
+	}
 
-			int x = (int) ev.getX();
-			int y = (int) ev.getY();
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
 
-			switch (ev.getAction()) {
+		if (mDragPosition != AdapterView.INVALID_POSITION && mDragImageView != null) {
+
+			final int x = (int) event.getX();
+			final int y = (int) event.getY();
+
+			switch (event.getAction()) {
 
 			case MotionEvent.ACTION_MOVE:
 
-				mDragOffsetX = (int) (ev.getRawX() - x);
-				mDragOffsetY = (int) (ev.getRawY() - y);
+				mDragOffsetX = (int) (event.getRawX() - x);
+				mDragOffsetY = (int) (event.getRawY() - y);
 
 				onDrag(x, y);
+
 				break;
 
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL:
 
-				onDrop(x, y);
+				onDrop();
 
-				getParent().requestDisallowInterceptTouchEvent(false);
 				resetLongClickTransition();
 
+				getParent().requestDisallowInterceptTouchEvent(false);
+				
 				return false;
+
+			default:
+
 			}
 
 			return true;

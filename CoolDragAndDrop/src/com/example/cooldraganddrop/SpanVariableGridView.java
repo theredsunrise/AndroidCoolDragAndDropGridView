@@ -25,8 +25,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 	private static final int NOT_DEFINED_VALUE = -1;
 
 	public static interface CalculateChildrenPosition {
-		void onCalculatePosition(final View view, final int position,
-				final int row, final int column);
+		void onCalculatePosition(final View view, final int position, final int row, final int column);
 
 	};
 
@@ -121,8 +120,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 
 	}
 
-	public SpanVariableGridView(Context context, AttributeSet attrs,
-			int defStyle) {
+	public SpanVariableGridView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
 		initialize(attrs);
@@ -142,14 +140,11 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 	private void initialize(final AttributeSet attrs) {
 
 		if (attrs != null) {
-			TypedArray a = getContext().obtainStyledAttributes(attrs,
-					R.styleable.SpanVariableGridView);
+			TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpanVariableGridView);
 
 			try {
-				mColCount = a.getInteger(
-						R.styleable.SpanVariableGridView_numColumns, 2);
-				mItemMargin = a.getDimensionPixelSize(
-						R.styleable.SpanVariableGridView_itemMargin, 0);
+				mColCount = a.getInteger(R.styleable.SpanVariableGridView_numColumns, 2);
+				mItemMargin = a.getDimensionPixelSize(R.styleable.SpanVariableGridView_itemMargin, 0);
 
 			} finally {
 				a.recycle();
@@ -163,15 +158,13 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 		}
 	}
 
-	public boolean addCalculateChildrenPositionListener(
-			final CalculateChildrenPosition listener) {
+	public boolean addCalculateChildrenPositionListener(final CalculateChildrenPosition listener) {
 
 		return mCalculateChildrenPositionList.add(listener);
 
 	}
 
-	public boolean removeCalculateChildrenPositionListener(
-			final CalculateChildrenPosition listener) {
+	public boolean removeCalculateChildrenPositionListener(final CalculateChildrenPosition listener) {
 
 		return mCalculateChildrenPositionList.remove(listener);
 
@@ -209,8 +202,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 	}
 
 	@Override
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
 		if (mAdapter == null) {
 			return;
@@ -252,16 +244,14 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 		int rowHeight = 0;
 		int fullHeight = mItemMargin;
 		int width = getMeasuredWidth() - 2 * mItemMargin;
-		final int colWidth = (width - (mColCount - 1) * mItemMargin)
-				/ mColCount;
+		final int colWidth = (width - (mColCount - 1) * mItemMargin) / mColCount;
 
 		Rect draggedChildRect = null;
 
 		for (int position = 0; position < mAdapter.getCount(); position++) {
 			final View childView = getChildAt(position);
 
-			final Point prev = new Point(childView.getLeft(),
-					childView.getTop());
+			final Point prev = new Point(childView.getLeft(), childView.getTop());
 
 			final LayoutParams lp = (LayoutParams) childView.getLayoutParams();
 
@@ -275,12 +265,9 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 			rowHeight = Math.max(rowHeight, childView.getMeasuredHeight());
 			row = lp.row;
 
-			final int width_ = column == LayoutParams.ALL_COLUMNS ? width
-					: (lp.span * (colWidth + mItemMargin) - mItemMargin);
+			final int width_ = column == LayoutParams.ALL_COLUMNS ? width : (lp.span * (colWidth + mItemMargin) - mItemMargin);
 
-			final int left_ = mItemMargin
-					+ (column == LayoutParams.ALL_COLUMNS ? 0 : column
-							* (colWidth + mItemMargin));
+			final int left_ = mItemMargin + (column == LayoutParams.ALL_COLUMNS ? 0 : column * (colWidth + mItemMargin));
 			final int top_ = fullHeight;
 			final int right_ = left_ + width_;
 			final int bottom_ = top_ + childView.getMeasuredHeight();
@@ -306,9 +293,8 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 
 	protected final void translateChild(View v, Point prev, Point now) {
 
-		TranslateAnimation translate = new TranslateAnimation(
-				Animation.ABSOLUTE, -now.x + prev.x, Animation.ABSOLUTE, 0,
-				Animation.ABSOLUTE, -now.y + prev.y, Animation.ABSOLUTE, 0);
+		TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, -now.x + prev.x, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, -now.y
+				+ prev.y, Animation.ABSOLUTE, 0);
 		translate.setInterpolator(new AccelerateInterpolator(4f));
 		translate.setDuration(350);
 		translate.setFillEnabled(false);
@@ -322,11 +308,9 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 
 		final int heightSpec;
 		if (height == LayoutParams.WRAP_CONTENT) {
-			heightSpec = MeasureSpec
-					.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+			heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 		} else {
-			heightSpec = MeasureSpec.makeMeasureSpec(height,
-					MeasureSpec.EXACTLY);
+			heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
 		}
 
 		final int widthSpec;
@@ -339,8 +323,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 		child.measure(widthSpec, heightSpec);
 	}
 
-	protected int pointToPosition(final int draggedChild, final int x,
-			final int y) {
+	protected int pointToPosition(final int draggedChild, final int x, final int y) {
 
 		for (int index = 0; index < getChildCount(); index++) {
 
@@ -359,8 +342,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 
 	private void clickChildAt() {
 
-		final int index = pointToPosition(INVALID_POSITION, mTouchStartX,
-				mTouchStartY);
+		final int index = pointToPosition(INVALID_POSITION, mTouchStartX, mTouchStartY);
 
 		if (index != INVALID_POSITION && index == mTouchStartItemPosition) {
 
@@ -390,10 +372,8 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 				public void run() {
 
 					if (mTouchState == TOUCH_STATE_CLICK) {
-						final int index = pointToPosition(INVALID_POSITION,
-								mTouchStartX, mTouchStartY);
-						if (index != INVALID_POSITION
-								&& index == mTouchStartItemPosition) {
+						final int index = pointToPosition(INVALID_POSITION, mTouchStartX, mTouchStartY);
+						if (index != INVALID_POSITION && index == mTouchStartItemPosition) {
 							longClickChild(index);
 							mTouchState = TOUCH_STATE_LONG_CLICK;
 						}
@@ -402,43 +382,29 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 			};
 		}
 
-		startLongClickTransition();
-
 		postDelayed(mLongPressRunnable, ViewConfiguration.getLongPressTimeout());
 	}
 
-	protected void startLongClickTransition() {
+	protected void startLongClickTransition(final View clickedChild) {
 
-		if (mTouchStartItemPosition != INVALID_POSITION
-				&& mItemTransitionDrawable == null) {
+		if (clickedChild != null && mItemTransitionDrawable == null) {
 
-			final View clickedChild = getChildAt(mTouchStartItemPosition);
+			if (clickedChild.getBackground().getCurrent() instanceof TransitionDrawable) {
 
-			if (clickedChild.getBackground() instanceof StateListDrawable) {
+				mItemTransitionDrawable = (TransitionDrawable) clickedChild.getBackground().getCurrent();
 
-				clickedChild.getBackground().setState(new int[]{android.R.attr.state_pressed});
-				
-				if (clickedChild.getBackground().getCurrent() instanceof TransitionDrawable) {
-
-					mItemTransitionDrawable = (TransitionDrawable) clickedChild
-							.getBackground().getCurrent();
-
-					mItemTransitionDrawable.resetTransition();
-
-					mItemTransitionDrawable.startTransition(ViewConfiguration
-							.getLongPressTimeout());
-				}
+				mItemTransitionDrawable.startTransition(ViewConfiguration.getLongPressTimeout());
 			}
 		}
 	}
 
 	protected void resetLongClickTransition() {
 
-		if (mTouchStartItemPosition != INVALID_POSITION
-				&& mItemTransitionDrawable != null) {
+		if (mItemTransitionDrawable != null) {
 
 			mItemTransitionDrawable.resetTransition();
 			mItemTransitionDrawable = null;
+
 		}
 	}
 
@@ -456,8 +422,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 		setMeasuredDimension(measuredWidth, mControlHeight);
 	}
 
-	private void fireCalculateChildrenPositionEvent(final View view,
-			final int position, final int row, final int column) {
+	private void fireCalculateChildrenPositionEvent(final View view, final int position, final int row, final int column) {
 
 		for (CalculateChildrenPosition listener : mCalculateChildrenPositionList) {
 			listener.onCalculatePosition(view, position, row, column);
@@ -479,13 +444,10 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 			if (childView == null) {
 				childView = mAdapter.getView(position, null, this);
 
-				LayoutParams params = (LayoutParams) childView
-						.getLayoutParams();
+				LayoutParams params = (LayoutParams) childView.getLayoutParams();
 				if (params == null) {
 
-					params = new LayoutParams(new AdapterView.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
+					params = new LayoutParams(new AdapterView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 				}
 
 				if (!justMeasure) {
@@ -505,19 +467,16 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 				if (spansFilled <= mColCount) {
 
 					lp.row = row;
-					lp.column = lp.span == mColCount ? LayoutParams.ALL_COLUMNS
-							: col;
+					lp.column = lp.span == mColCount ? LayoutParams.ALL_COLUMNS : col;
 					col = spansFilled;
 
 					if (justMeasure) {
-						fireCalculateChildrenPositionEvent(childView,
-								lp.position, lp.row, lp.column);
+						fireCalculateChildrenPositionEvent(childView, lp.position, lp.row, lp.column);
 					} else {
 						childView.setLayoutParams(lp);
 					}
 
-					rowHeight = Math.max(rowHeight,
-							mItemMargin + childView.getMeasuredHeight());
+					rowHeight = Math.max(rowHeight, mItemMargin + childView.getMeasuredHeight());
 				}
 
 				if (spansFilled >= mColCount) {
@@ -551,22 +510,23 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 
 	}
 
-	@Override
-	public boolean onInterceptTouchEvent(final MotionEvent event) {
-		onTouchEvent(event);
-		return false;
-	}
-
 	private void startTouch(final MotionEvent event) {
 
 		mTouchStartX = (int) event.getX();
 		mTouchStartY = (int) event.getY();
-		mTouchStartItemPosition = pointToPosition(INVALID_POSITION,
-				mTouchStartX, mTouchStartY);
+		mTouchStartItemPosition = pointToPosition(INVALID_POSITION, mTouchStartX, mTouchStartY);
 
 		startLongPressCheck();
 
 		mTouchState = TOUCH_STATE_CLICK;
+	}
+
+	@Override
+	public void childDrawableStateChanged(View child) {
+
+		startLongClickTransition(child);
+
+		super.childDrawableStateChanged(child);
 	}
 
 	private void endTouch() {
@@ -579,11 +539,16 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 	}
 
 	@Override
-	public boolean onTouchEvent(final MotionEvent event) {
+	public boolean dispatchTouchEvent(MotionEvent event) {
+
+		final boolean result = super.dispatchTouchEvent(event);
+
 		if (getChildCount() == 0) {
-			return false;
+			return result;
 		}
+
 		switch (event.getAction()) {
+
 		case MotionEvent.ACTION_DOWN:
 			startTouch(event);
 			break;
@@ -595,6 +560,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 			if (mTouchState == TOUCH_STATE_CLICK) {
 				clickChildAt();
 			}
+
 			endTouch();
 			break;
 
@@ -602,7 +568,8 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 			endTouch();
 			break;
 		}
-		return true;
+
+		return result;
 	}
 
 }

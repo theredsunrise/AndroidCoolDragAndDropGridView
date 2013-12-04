@@ -12,8 +12,7 @@ import android.widget.TextView;
 
 import com.example.cooldraganddrop.SpanVariableGridView.LayoutParams;
 
-public class ItemAdapter extends ArrayAdapter<Item> implements
-		SpanVariableGridView.CalculateChildrenPosition {
+public class ItemAdapter extends ArrayAdapter<Item> implements SpanVariableGridView.CalculateChildrenPosition {
 
 	private final class ItemViewHolder {
 
@@ -71,12 +70,9 @@ public class ItemAdapter extends ArrayAdapter<Item> implements
 			convertView = mLayoutInflater.inflate(R.layout.item, parent, false);
 
 			itemViewHolder = new ItemViewHolder();
-			itemViewHolder.itemTitle = (TextView) convertView
-					.findViewById(R.id.textViewTitle);
-			itemViewHolder.itemDescription = (TextView) convertView
-					.findViewById(R.id.textViewDescription);
-			itemViewHolder.itemIcon = (ImageView) convertView
-					.findViewById(R.id.imageViewIcon);
+			itemViewHolder.itemTitle = (TextView) convertView.findViewById(R.id.textViewTitle);
+			itemViewHolder.itemDescription = (TextView) convertView.findViewById(R.id.textViewDescription);
+			itemViewHolder.itemIcon = (ImageView) convertView.findViewById(R.id.imageViewIcon);
 			convertView.setTag(itemViewHolder);
 
 		} else {
@@ -86,15 +82,14 @@ public class ItemAdapter extends ArrayAdapter<Item> implements
 
 		final Item item = getItem(position);
 
-		SpanVariableGridView.LayoutParams lp = new LayoutParams(
-				convertView.getLayoutParams());
+		SpanVariableGridView.LayoutParams lp = new LayoutParams(convertView.getLayoutParams());
 		lp.span = item.getSpans();
 		convertView.setLayoutParams(lp);
 
 		itemViewHolder.itemTitle.setText(item.getTitle());
 		itemViewHolder.itemDescription.setText(item.getDescription());
 		itemViewHolder.itemIcon.setImageResource(item.getIcon());
-		
+
 		return convertView;
 	}
 
