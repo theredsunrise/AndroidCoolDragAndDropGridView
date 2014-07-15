@@ -541,10 +541,8 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
 
-		final boolean result = super.dispatchTouchEvent(event);
-
 		if (getChildCount() == 0) {
-			return result;
+			return super.dispatchTouchEvent(event);
 		}
 
 		switch (event.getAction()) {
@@ -569,7 +567,7 @@ public class SpanVariableGridView extends AdapterView<BaseAdapter> {
 			break;
 		}
 
-		return result;
+		return super.dispatchTouchEvent(event);
 	}
 
 }
